@@ -1,0 +1,177 @@
+using System;
+
+public class Nodo
+{
+    public int Valor;
+    public Nodo Izquierda;
+    public Nodo Derecha;
+
+    public Nodo(int valor)
+    {
+        Valor = valor;
+        Izquierda = null;
+        Derecha = null;
+    }
+}
+
+public class ArbolBinario
+{
+    public Nodo Raiz;
+
+    public ArbolBinario()
+    {
+        Raiz = null;
+    }
+
+    public void Insertar(int valor)
+    {
+        Raiz = InsertarRec(Raiz, valor);
+    }
+
+    private Nodo InsertarRec(Nodo raiz, int valor)
+    {
+        if (raiz == null)
+        {
+            raiz = new Nodo(valor);
+            return raiz;
+        }
+
+        if (valor < raiz.Valor)
+            raiz.Izquierda = InsertarRec(raiz.Izquierda, valor);
+        else if (valor > raiz.Valor)
+            raiz.Derecha = InsertarRec(raiz.Derecha, valor);
+
+        return raiz;
+    }
+
+    public void RecorridoPreOrden(Nodo raiz)
+    {
+        if (raiz != null)
+        {
+            Console.Write(raiz.Valor + " ");
+            RecorridoPreOrden(raiz.Izquierda);
+            RecorridoPreOrden(raiz.Derecha);
+        }
+    }
+
+    public void RecorridoInOrden(Nodo raiz)
+    {
+        if (raiz != null)
+        {
+            RecorridoInOrden(raiz.Izquierda);
+            Console.Write(raiz.Valor + " ");
+            RecorridoInOrden(raiz.Derecha);
+        }
+    }
+
+    public void RecorridoPostOrden(Nodo raiz)
+    {
+        if (raiz != null)
+        {
+            RecorridoPostOrden(raiz.Izquierda);
+            RecorridoPostOrden(raiz.Derecha);
+            Console.Write(raiz.Valor + " ");
+        }
+    }
+
+    public Nodo Buscar(int valor)
+    {
+        return BuscarRec(Raiz, valor);
+    }
+
+    private Nodo BuscarRec(Nodo raiz, int valor)
+    {
+        if (raiz == null || raiz.Valor == valor)
+            return raiz;
+
+        if (valor < raiz.Valor)
+            return BuscarRec(raiz.Izquierda, valor);
+
+        return BuscarRec(raiz.Derecha, valor);
+    }
+
+    public int AlturaArbol(Nodo raiz)
+    {
+        if (raiz == null)
+            return 0;
+
+        int alturaIzquierda = AlturaArbol(raiz.Izquierda);
+        int alturaDerecha = AlturaArbol(raiz.Derecha);
+
+        return Math.Max(alturaIzquierda, alturaDerecha) + 1;
+    }
+
+    public int CantidadNodos(Nodo raiz)
+    {
+        if (raiz == null)
+            return 0;
+
+        return 1 + CantidadNodos(raiz.Izquierda) + CantidadNodos(raiz.Derecha);
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        ArbolBinario arbol = new ArbolBinario();
+        int opcion;
+        do
+        {
+            Console.WriteLine("\nMenú de Operaciones:");
+            Console.WriteLine("1. Insertar nodo");
+            Console.WriteLine("2. Recorrido PreOrden");
+            Console.WriteLine("3. Recorrido InOrden");
+            Console.WriteLine("4. Recorrido PostOrden");
+            Console.WriteLine("5. Buscar nodo");
+            Console.WriteLine("6. Calcular altura del árbol");
+            Console.WriteLine("7. Calcular cantidad de nodos");
+            Console.WriteLine("8. Salir");
+            Console.Write("Seleccione una opción: ");
+            opcion = int.Parse(Console.ReadLine());
+
+            switch (opcion)
+            {
+                case 1:
+                    Console.Write("Ingrese el valor a insertar: ");
+                    int valor = int.Parse(Console.ReadLine());
+                    arbol.Insertar(valor);
+                    break;
+                case 2:
+                    Console.WriteLine("Recorrido PreOrden:");
+                    arbol.RecorridoPreOrden(arbol.Raiz);
+                    break;
+                case 3:
+                    Console.WriteLine("Recorrido InOrden:");
+                    arbol.RecorridoInOrden(arbol.Raiz);
+                    break;
+                case 4:
+                    Console.WriteLine("Recorrido PostOrden:");
+                    arbol.RecorridoPostOrden(arbol.Raiz);
+                    break;
+                case 5:
+                    Console.Write("Ingrese el valor a buscar: ");
+                    int buscarValor = int.Parse(Console.ReadLine());
+                    Nodo nodoBuscado = arbol.Buscar(buscarValor);
+                    if (nodoBuscado != null)
+                        Console.WriteLine("Nodo encontrado: " + nodoBuscado.Valor);
+                    else
+                        Console.WriteLine("Nodo no encontrado");
+                    break;
+                case 6:
+                    Console.WriteLine("Altura del árbol: " + arbol.AlturaArbol(arbol.Raiz));
+                    break;
+                case 7:
+                    Console.WriteLine("Cantidad de nodos: " + arbol.CantidadNodos(arbol.Raiz));
+                    break;
+                case 8:
+                    Console.WriteLine("Saliendo...");
+                    break;
+                default:
+                    Console.WriteLine("Opción no válida");
+                    break;
+            }
+        } while (opcion != 8);
+    }
+}
+
